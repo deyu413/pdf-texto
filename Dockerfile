@@ -12,17 +12,17 @@ RUN apt-get update && apt-get install -y \
 # Establece el directorio de trabajo
 WORKDIR /app
 
-# Copia el proyecto
+# Copia todos los archivos del proyecto a la imagen
 COPY . /app
 
-# Instala dependencias
+# Instala dependencias Python (incluyendo python-multipart y demás)
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Expone el puerto (por defecto 8000; Railway establecerá $PORT)
+# Define el valor por defecto de PORT (Railway lo sobrescribirá si provee uno)
+ENV PORT 8000
+
+# Expone el puerto (por defecto 8000)
 EXPOSE 8000
 
-# Inicia la aplicación utilizando la forma shell para CMD
-CMD uvicorn main:app --host 0.0.0.0 --port ${PORT:-8000}
-
-# Forzado para redeploy en Railway
-
+# Inicia la aplicación utilizando la forma shell para CMD y así expandir la variable PORT
+CMD ["sh", "-c", "uvicorn main:app --host 0.0.0.0 --port ${PORT}"]
