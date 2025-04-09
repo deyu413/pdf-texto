@@ -1,8 +1,7 @@
 #!/bin/sh
-# Si la variable PORT no está definida, usa 8000 como valor por defecto
+# Si PORT no está definida, se usa 8000 por defecto
 if [ -z "$PORT" ]; then
-    PORT=8000
+  PORT=8000
 fi
-echo "Iniciando la aplicación en el puerto $PORT"
-# Ejecuta uvicorn sin comillas alrededor de $PORT para que se expanda correctamente
-exec uvicorn main:app --host 0.0.0.0 --port $PORT
+echo "Starting app on port $PORT"
+exec uvicorn main:app --host 0.0.0.0 --port "$PORT"

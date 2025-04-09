@@ -1,6 +1,6 @@
 FROM python:3.12-slim
 
-# Actualiza e instala Tesseract OCR y dependencias
+# Actualiza e instala Tesseract OCR y sus dependencias
 RUN apt-get update && apt-get install -y \
     tesseract-ocr \
     libglib2.0-0 \
@@ -12,21 +12,21 @@ RUN apt-get update && apt-get install -y \
 # Establece el directorio de trabajo
 WORKDIR /app
 
-# Copia todos los archivos del proyecto
+# Copia todos los archivos del proyecto a la imagen
 COPY . /app
 
-# Instala dependencias de Python
+# Instala dependencias Python
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Define el valor por defecto de PORT (Railway lo sobrescribirá si lo define)
+# Define PORT por defecto (Railway la sobrescribirá)
 ENV PORT 8000
 
-# Expone el puerto 8000
+# Expone el puerto
 EXPOSE 8000
 
-# Copia el entrypoint.sh y le da permisos de ejecución
+# Copia el entrypoint script y lo hace ejecutable
 COPY entrypoint.sh /app/entrypoint.sh
 RUN chmod +x /app/entrypoint.sh
 
-# Establece el entrypoint para iniciar la aplicación
+# Usa el entrypoint para iniciar la aplicación
 ENTRYPOINT ["/app/entrypoint.sh"]
