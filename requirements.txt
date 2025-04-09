@@ -1,6 +1,6 @@
-fastapi
-uvicorn
-pymupdf
-pytesseract
-Pillow
+fastapi==0.115.12
+uvicorn==0.34.0
+PyMuPDF==1.25.5
+pytesseract==0.3.13
+Pillow==11.1.0
 python-multipart==0.0.20
