@@ -1,6 +1,6 @@
 FROM python:3.12-slim
 
-# Actualiza e instala Tesseract OCR y dependencias
+# Instala Tesseract OCR y dependencias
 RUN apt-get update && apt-get install -y \
     tesseract-ocr \
     libglib2.0-0 \
@@ -9,21 +9,18 @@ RUN apt-get update && apt-get install -y \
     libxrender-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Establece el directorio de trabajo
 WORKDIR /app
 
-# Copia todos los archivos del proyecto a la imagen
 COPY . /app
 
-# Instala dependencias Python (incluyendo python-multipart y demás)
+# Instala dependencias Python (incluyendo python-multipart)
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Define el valor por defecto de PORT (Railway lo sobrescribirá si provee uno)
-ENV PORT 8000
+# Define el puerto por defecto (Railway lo sobrescribirá)
+ENV PORT=8000
 
-# Expone el puerto (por defecto 8000)
-EXPOSE 8000
+# Expone el puerto definido en la variable ENV
+EXPOSE $PORT
 
-# Inicia la aplicación utilizando la forma shell para CMD y así expandir la variable PORT
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
-
+# Usa la variable PORT dinámica (IMPORTANTE: usa shell-form para expandir $PORT)
+CMD uvicorn main:app --host 0.0.0.0 --port $PORT
