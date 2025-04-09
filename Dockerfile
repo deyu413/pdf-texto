@@ -12,15 +12,21 @@ RUN apt-get update && apt-get install -y \
 # Establece el directorio de trabajo
 WORKDIR /app
 
-# Copia el proyecto
+# Copia todos los archivos del proyecto en la imagen
 COPY . /app
 
-# Instala dependencias
+# Instala dependencias de Python
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Expone el puerto por defecto
+# Define el valor por defecto de PORT (se sobrescribe en Railway si es necesario)
+ENV PORT 8000
+
+# Expone el puerto
 EXPOSE 8000
 
-# CMD usando shell para que se expanda la variable de entorno PORT
-CMD sh -c "uvicorn main:app --host 0.0.0.0 --port ${PORT:-8000}"
+# Copia el script de entrada y le da permisos de ejecución
+COPY entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
 
+# Establece el ENTRYPOINT para arrancar la aplicación
+ENTRYPOINT ["/app/entrypoint.sh"]
